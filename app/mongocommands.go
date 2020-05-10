@@ -34,6 +34,15 @@ func ConnectMongo(mctx context.Context, mongohost string) (*mongo.Client, error)
 
 //Get collection of mongodb
 func GetDBCollection(client *mongo.Client, dbname string, collectionname string) *mongo.Collection {
+	mctx := context.TODO()
+	err := client.Ping(mctx, nil)
+	if err != nil {
+		client, mgerr = ConnectMongo(mctx, MONGOHOST)
+		if mgerr != nil {
+			log.Fatalf("Mongo Connection Failed")
+			return nil
+		}
+	}
 	collection := client.Database(dbname).Collection(collectionname)
 	return collection
 }

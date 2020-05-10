@@ -18,8 +18,9 @@ var mgerr error
 
 func Init() {
 	fmt.Println("Starting Goserver")
-	catchSignals(PIDFILE)
-	CreatePidFile(PIDFILE)
+	dir, _ := os.Getwd()
+	catchSignals(dir + "/goserver.pid")
+	CreatePidFile(dir + "/goserver.pid")
 	stopflag = false
 	//mctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	Mongoconn, mgerr = ConnectMongo(context.TODO(), MONGOHOST)

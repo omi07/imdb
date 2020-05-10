@@ -127,34 +127,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func ProfileHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	tokenString := r.Header.Get("Authorization")
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// Don't forget to validate the alg is what you expect:
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method")
-		}
-		return []byte("secret"), nil
-	})
-	var result model.User
-	var res model.ResponseResult
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		result.Username = claims["username"].(string)
-		result.FirstName = claims["firstname"].(string)
-		result.LastName = claims["lastname"].(string)
-		result.Role = claims["role"].(string)
-
-		json.NewEncoder(w).Encode(result)
-		return
-	} else {
-		res.Error = err.Error()
-		json.NewEncoder(w).Encode(res)
-		return
-	}
-
-}
-
 //AddMovies insert movie data into DB
 func AddMovies(w http.ResponseWriter, r *http.Request) {
 
@@ -206,14 +178,14 @@ func RateCommentMovie(w http.ResponseWriter, r *http.Request) {
 	if jsonerr != nil {
 		log.Fatal(err)
 	}
+	//Checks for rating to calculate average rating in movies collection
 	if _, ok := data["rating"]; ok {
 
 		mvcollection := app.GetDBCollection(app.Mongoconn, "imdb", "movies")
 		mctx := context.TODO()
-		//var mvdata map[string]interface{}
 		mvfilter := bson.D{{"movieid", data["movieid"]}}
+
 		mvdata, mgerr := app.MongoFindOne(mvcollection, mvfilter, nil)
-		//mgerr := mvcollection.FindOne(mctx, mvfilter).Decode(&mvdata)
 		if mgerr != nil {
 			res.Error = "Error Finding Data for movieid " + data["movieid"].(string) + " " + mgerr.Error()
 			json.NewEncoder(w).Encode(res)
@@ -231,6 +203,7 @@ func RateCommentMovie(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	//Updates rating and comments across the user
 	collection := app.GetDBCollection(app.Mongoconn, "imdb", "userdetails")
 
 	filter := bson.D{{"uid", userid}}
@@ -248,6 +221,7 @@ func RateCommentMovie(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//SearchMovie searches the movie by movieid
 func SearchMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -267,6 +241,7 @@ func SearchMovie(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+//GetMovies Fetchs all movies from collection
 func GetMovies(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 

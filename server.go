@@ -17,8 +17,6 @@ func main() {
 		Methods("POST")
 	r.HandleFunc("/login", controller.Login).
 		Methods("POST")
-	r.HandleFunc("/profile", controller.ProfileHandler).
-		Methods("GET")
 	r.HandleFunc("/addmovie", controller.AddMovies).
 		Methods("POST")
 	r.HandleFunc("/ratemovie", controller.RateCommentMovie).

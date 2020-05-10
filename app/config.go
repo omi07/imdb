@@ -11,17 +11,23 @@ const (
 	DEFAULTMSG = "Custom http"
 
 	//PIDFILE location where the pid file exists and also for lock
-	PIDFILE = "/Users/omkarpatil/Documents/Projects/Go Projects/Imdb/goserver.pid"
+	PIDFILE = "$HOME/goserver.pid"
 
-	//AuthDatabase Mongo Config
-	AuthDatabase = "admin"
-
-	//Maximum retry for Mongo Connection
+	//MAXRETRY Maximum retry for Mongo Connection
 	MAXRETRY = 3
 
-	//Mongo host ....
+	//MONGOHOST Mongo host ....
 	MONGOHOST = "mongodb://localhost:27017"
 
-	//Maximum number of connections
+	//MAXCONNPOOL Maximum number of connections
 	MAXCONNPOOL = 5
+
+	//Dbname ...
+	Dbname = "imdb"
+
+	//UserCollection  ....
+	UserCollection = "userdetails"
+
+	//MovieCollection
+	MovieCollection = "movies"
 )
