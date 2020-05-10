@@ -200,7 +200,7 @@ func RateCommentMovie(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(res)
 			return
 		}
-		updaterating := (mvdata["rating"].(float64) + data["rating"].(float64)) / (float64(mvdata["totalusers"].(int32)) + 1)
+		updaterating := ((mvdata["rating"].(float64) * float64(mvdata["totalusers"].(int32))) + data["rating"].(float64)) / (float64(mvdata["totalusers"].(int32)) + 1)
 
 		mvupdate := bson.D{{"$set", bson.D{{"rating", updaterating}, {"totalusers", mvdata["totalusers"].(int32) + 1}}}}
 

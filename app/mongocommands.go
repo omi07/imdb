@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"../model"
@@ -96,7 +95,7 @@ func MongoFindOne(collection *mongo.Collection, filter interface{}, projection i
 	mgerr := collection.FindOne(mctx, filter, options.FindOne().SetProjection(projection)).Decode(&result)
 
 	if mgerr != nil {
-		fmt.Printf("ERROR %v  ", mgerr.Error())
+		//fmt.Printf("ERROR %v  ", mgerr.Error())
 		return nil, mgerr
 	}
 	return result, nil
