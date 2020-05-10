@@ -48,10 +48,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			//Gets max id from documents
 			user.Uid, _ = app.GetUserid(collection)
 
+			fmt.Printf("USERID :%v \n", user.Uid)
 			//Inserting a new userdetails in Mongo
 			err = app.MongoInsert(collection, user)
 			if err != nil {
-				res.Error = "Error While Creating User, Try Again"
+				res.Error = "Error While Creating User, Try Again " + err.Error()
 				json.NewEncoder(w).Encode(res)
 				return
 			}
@@ -178,8 +179,16 @@ func RateCommentMovie(w http.ResponseWriter, r *http.Request) {
 	if jsonerr != nil {
 		log.Fatal(err)
 	}
+	collection := app.GetDBCollection(app.Mongoconn, app.Dbname, app.UserCollection)
 	//Checks for rating to calculate average rating in movies collection
 	if _, ok := data["rating"]; ok {
+		//Check if rating for movie exists
+		exists := app.CheckRatingExists(collection, data["movieid"].(string), userid)
+		if exists == true {
+			res.Error = "Movie Rating already Exists"
+			json.NewEncoder(w).Encode(res)
+			return
+		}
 
 		mvcollection := app.GetDBCollection(app.Mongoconn, "imdb", "movies")
 		mctx := context.TODO()
@@ -204,11 +213,11 @@ func RateCommentMovie(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	//Updates rating and comments across the user
-	collection := app.GetDBCollection(app.Mongoconn, "imdb", "userdetails")
+	//collection := app.GetDBCollection(app.Mongoconn, "imdb", "userdetails")
 
 	filter := bson.D{{"uid", userid}}
 
-	update := bson.M{"$push": bson.M{"rating": data}}
+	update := bson.M{"$push": bson.M{"ratedmovies": data}}
 	result := app.FindAndUpdate(collection, filter, update)
 	if result == false {
 		res.Error = "Updating rating & Comments Failed"
@@ -247,7 +256,7 @@ func GetMovies(w http.ResponseWriter, r *http.Request) {
 
 	mctx := context.TODO()
 	var res model.ResponseResult
-	var result map[string]interface{}
+
 	mvcollection := app.GetDBCollection(app.Mongoconn, "imdb", "movies")
 
 	cur, err := mvcollection.Find(mctx, bson.D{{}}, options.Find().SetProjection(bson.D{{"_id", 0}}))
@@ -257,6 +266,7 @@ func GetMovies(w http.ResponseWriter, r *http.Request) {
 	}
 	var data []map[string]interface{}
 	for cur.Next(mctx) {
+		var result map[string]interface{}
 		cur.Decode(&result)
 		data = append(data, result)
 	}

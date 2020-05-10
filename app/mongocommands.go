@@ -69,7 +69,7 @@ func GetUserid(collection *mongo.Collection) (int64, error) {
 
 	filter := bson.D{}
 	projection := bson.D{{"uid", 1}, {"_id", 0}}
-	cur, err := collection.Find(mctx, filter, options.Find().SetProjection(projection), options.Find().SetSort(bson.D{{"_id", -1}}))
+	cur, err := collection.Find(mctx, filter, options.Find().SetProjection(projection), options.Find().SetSort(bson.D{{"_id", -1}}), options.Find().SetLimit(1))
 
 	defer cur.Close(mctx)
 	var result map[string]int64
@@ -96,8 +96,21 @@ func MongoFindOne(collection *mongo.Collection, filter interface{}, projection i
 	mgerr := collection.FindOne(mctx, filter, options.FindOne().SetProjection(projection)).Decode(&result)
 
 	if mgerr != nil {
-		fmt.Printf("ERROR %v %v ", mgerr.Error())
+		fmt.Printf("ERROR %v  ", mgerr.Error())
 		return nil, mgerr
 	}
 	return result, nil
+}
+
+func CheckRatingExists(collection *mongo.Collection, movieid string, userid int64) bool {
+
+	filter := bson.D{{"ratedmovies.movieid", movieid}, {"uid", userid}}
+	projection := bson.D{{"rating.rating", 1}, {"uid", 1}}
+
+	_, err := MongoFindOne(collection, filter, projection)
+	if err != nil && err.Error() == "mongo: no documents in result" {
+		return false
+	}
+	return true
+
 }
