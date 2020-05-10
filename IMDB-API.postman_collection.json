@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "377a02cb-5b95-45fb-9c4c-13e661b47482",
+		"name": "IMDB API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"alpha\",\n\t\"password\":\"alpha1234\",\n\t\"firstname\":\"alpha\",\n\t\"lastname\":\"test\",\n\t\"role\":\"admin\"\n}"
+				},
+				"url": {
+					"raw": "localhost:9080/register",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"register"
+					]
+				},
+				"description": "Add Users into Database Checks whether username exists "
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9080/login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"alpha\",\n\t\"password\":\"alpha1234\"\n\t\n}"
+				},
+				"url": {
+					"raw": "localhost:9080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"login"
+					]
+				},
+				"description": "API used for login which return a token "
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9080/addmovie",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdG5hbWUiOiJhbHBoYSIsImxhc3RuYW1lIjoidGVzdCIsInJvbGUiOiJhZG1pbiIsInVpZCI6MywidXNlcm5hbWUiOiJhbHBoYSJ9.YbtFj7I4U6STrj1zYw8qu-m4y3y6FrPv-Xebp4sy63U",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"movieid\":\"107\",\n\t\"title\":\"Avengers\",\n\t\"year\":\"2019\",\n\t\"rating\":0,\n\t\"totalusers\":0\n\t\n}"
+				},
+				"url": {
+					"raw": "localhost:9080/addmovie",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"addmovie"
+					]
+				},
+				"description": "Add movie into Database only if user is admin \nFor Authorization token needs to be passed into header"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9080/ratemovie",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdG5hbWUiOiJhbHBoYSIsImxhc3RuYW1lIjoidGVzdCIsInJvbGUiOiJhZG1pbiIsInVpZCI6MywidXNlcm5hbWUiOiJhbHBoYSJ9.YbtFj7I4U6STrj1zYw8qu-m4y3y6FrPv-Xebp4sy63U",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"movieid\":\"107\",\n\t\"rating\":4.0,\n\t\"comment\":\"Nyc Movie\"\n}"
+				},
+				"url": {
+					"raw": "localhost:9080/ratemovie",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"ratemovie"
+					]
+				},
+				"description": "Adds Rating of Movie "
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9080/commentmovie",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdG5hbWUiOiJhbHBoYSIsImxhc3RuYW1lIjoidGVzdCIsInJvbGUiOiJhZG1pbiIsInVpZCI6MywidXNlcm5hbWUiOiJhbHBoYSJ9.YbtFj7I4U6STrj1zYw8qu-m4y3y6FrPv-Xebp4sy63U",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"movieid\":\"111\",\n\t\"comment\":\"Good Movieeee\"\n}"
+				},
+				"url": {
+					"raw": "localhost:9080/commentmovie",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"commentmovie"
+					]
+				},
+				"description": "Adds Comment to the movie "
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9080/searchmovie?movieid=107",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:9080/searchmovie?movieid=107",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"searchmovie"
+					],
+					"query": [
+						{
+							"key": "movieid",
+							"value": "107"
+						}
+					]
+				},
+				"description": "Fetchs details of movie "
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:9080/getmovies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9080/getmovies",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"getmovies"
+					]
+				},
+				"description": "Fetchs all movie from Database "
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
